@@ -23,8 +23,8 @@ router.get("/problemGenerator", (req, res, next) => {
 router.post('/problemGenerator',
     isLoggedIn,
     async (req, res, next) => {
-        let prompt = "Generate some math problems based on the below requestion: "
-            + req.body.input;
+        let prompt = "Now you are a math problems generator. You will generate math problems with the amount and topic specified by users. Below is the user's request:"
+            + req.body.request;
         let answer = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: prompt,
@@ -39,8 +39,7 @@ router.post('/problemGenerator',
 
         const history = new GPTHistoryItem(
             {
-                prompt: "Generate some math problems based on the below requestion: "
-                + req.body.input,
+                prompt: req.body.request,
                 answer: answer ,
                 createdAt: new Date(),
                 userId: req.user._id,
@@ -49,6 +48,22 @@ router.post('/problemGenerator',
         await history.save()
         res.render('problemGptAnswer',{ answer });
 
+    }
+)
+
+router.get('/history',
+    isLoggedIn,
+    async (req, res, next) => {
+        let items = await GPTHistoryItem.find({ userId: req.user._id })
+        res.render('history', { items })
+    }
+)
+
+router.get('/history/clear',
+    isLoggedIn,
+    async (req, res, next) => {
+        await GPTHistoryItem.deleteMany({})
+        res.render('history', { items: [] })
     }
 )
 

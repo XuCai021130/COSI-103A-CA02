@@ -15,10 +15,7 @@
     <% if (items.length==0) { %>
         <p>No history for this user yet</p>
         <% } else { %>
-            <ul>
-                <li><a href="/gpt/history/clear">Clear history</a></li>
-                <li><a href="/gpt/history/sortByDate">Sort by date</a></li>
-            </ul>
+                <a class="btn btn-primary" href="/history/clear">Clear history</a>
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>Prompt</th>
